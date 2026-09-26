@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "sample_repo/app.py", line 42, in handle_request
+    result = process_order(request.data)
+  File "sample_repo/orders.py", line 18, in process_order
+    total = calculate_total(order["items"])
+  File "sample_repo/pricing.py", line 31, in calculate_total
+    unit_price = item["price"]
+  File "sample_repo/pricing.py", line 31, in calculate_total
+    subtotal += unit_price * item["quantity"]
+KeyError: 'price'

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Debug Assistant — Root Cause Report</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { font-family: -apple-system,"Segoe UI",system-ui,sans-serif; font-size:14px;
+           line-height:1.6; background:#f7f8fa; color:#1f2328; margin:0; padding:2rem 1rem; }
+    .container { max-width:860px; margin:0 auto; }
+    h1 { font-size:1.4rem; color:#1f2328; border-bottom:2px solid #3b82d4; padding-bottom:.4rem; }
+    h2 { font-size:1rem; color:#57606a; text-transform:uppercase; letter-spacing:.05em;
+          margin-top:1.8rem; margin-bottom:.4rem; }
+    .crash-banner { background:#fff1f0; border:1px solid #ffa39e; border-radius:6px;
+                     padding:.8rem 1rem; margin-bottom:1.2rem; font-size:.92rem; }
+    .crash-banner .exc { font-weight:700; color:#cf1322; }
+    .card { background:#fff; border:1px solid #e5e7eb; border-radius:6px;
+             margin-bottom:1rem; overflow:hidden; }
+    .card-header { background:#f7f8fa; padding:.6rem 1rem; font-weight:600;
+                    font-size:.88rem; color:#1f2328; }
+    .card-body { padding:.8rem 1rem; }
+    ol.chain { padding-left:1.4rem; margin:0; }
+    ol.chain li { padding:.2rem 0; font-size:.9rem; }
+    ol.chain li.root-cause { font-weight:700; color:#cf1322; }
+    .label { display:inline-block; min-width:100px; font-size:.8rem;
+              text-transform:uppercase; letter-spacing:.04em; color:#57606a; }
+    li.root-cause .label { color:#cf1322; }
+    ul { padding-left:1.4rem; margin:.4rem 0; }
+    li { margin:.2rem 0; font-size:.9rem; }
+    .subagent { margin-bottom:1rem; }
+    .subagent h3 { font-size:.95rem; margin:.6rem 0 .3rem; }
+    pre.diff { background:#0d1117; color:#e6edf3; padding:1rem; border-radius:6px;
+                font-size:.82rem; overflow-x:auto; line-height:1.5; }
+    .diff-add { color:#3fb950; }
+    .diff-del { color:#f85149; }
+    code { background:#f0f0f0; padding:.1rem .3rem; border-radius:3px; font-size:.85em; }
+    .confidence { background:#fffbe6; border:1px solid #ffe58f; border-radius:6px;
+                   padding:.8rem 1rem; font-size:.92rem; }
+    footer { margin-top:2rem; padding-top:.8rem; border-top:1px solid #e5e7eb;
+              text-align:center; font-size:.75rem; color:#57606a; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>Debug Assistant — Root Cause Report</h1>
+
+  <div class="crash-banner">
+    <span class="exc">KeyError</span>: 'price'<br>
+    <small>Crash at <code>sample_repo/pricing.py:31</code></small>
+  </div>
+
+  <h2>Causation Chain</h2>
+  
+        <div class="card">
+          <div class="card-header" style="border-left:4px solid #3b82d4">Crash site → Root cause</div>
+          <div class="card-body"><ol class="chain">
+          <li>
+            <span class="label">Frame 1</span>
+            <code>sample_repo/pricing.py:31</code> →
+            <code>calculate_total</code>
+          </li>
+          <li>
+            <span class="label">Frame 2</span>
+            <code>sample_repo/pricing.py:31</code> →
+            <code>calculate_total</code>
+          </li>
+          <li>
+            <span class="label">Frame 3</span>
+            <code>sample_repo/orders.py:18</code> →
+            <code>process_order</code>
+          </li>
+          <li class="root-cause">
+            <span class="label">⚑ ROOT CAUSE</span>
+            <code>sample_repo/app.py:42</code> →
+            <code>handle_request</code>
+          </li></ol></div>
+        </div>
+
+  <h2>Root Cause</h2>
+  
+        <div class="card">
+          <div class="card-header" style="border-left:4px solid #cf1322">Root Cause (plain language)</div>
+          <div class="card-body"><p>The root cause is in `handle_request` (sample_repo/app.py:42). This is where `item` is first assigned the invalid state that later causes the `KeyError` in `sample_repo/pricing.py:31`. The value is not validated before being passed downstream through the call chain.</p></div>
+        </div>
+
+  <h2>Evidence</h2>
+  
+        <div class="card">
+          <div class="card-header" style="border-left:4px solid #3b82d4">Files · Commits · Issues</div>
+          <div class="card-body"><ul><li>Crash site: `sample_repo/pricing.py:31` — KeyError: 'price'</li><li>Root cause: `sample_repo/app.py:42` in `handle_request`</li><li>  Frame 1: calculate_total (sample_repo/pricing.py:31)</li><li>  Frame 2: calculate_total (sample_repo/pricing.py:31)</li><li>  Frame 3: process_order (sample_repo/orders.py:18)</li><li>ROOT CAUSE -&gt; handle_request (sample_repo/app.py:42)</li><li>[git-blame] sample_repo/pricing.py: no recent changes — this file has been stable.</li><li>[git-blame] sample_repo/orders.py: no recent changes — this file has been stable.</li><li>[git-blame] sample_repo/app.py: no recent changes — this file has been stable.</li><li>[related-issues] No directly matching commits or issue references found. This may be a novel bug.</li><li>[test-coverage] [!] COVERAGE GAP: `handle_request` (sample_repo/app.py:42) has no dedicated test. This code path was unguarded.</li></ul></div>
+        </div>
+
+  <h2>Subagent Findings</h2>
+  
+        <div class="card">
+          <div class="card-header" style="border-left:4px solid #3b82d4">git-blame · related-issues · test-coverage</div>
+          <div class="card-body"><div class="subagent"><h3 style="color:#27ae60">test-coverage</h3><ul><li>[!] COVERAGE GAP: `handle_request` (sample_repo/app.py:42) has no dedicated test. This code path was unguarded.</li></ul></div><div class="subagent"><h3 style="color:#e67e22">related-issues</h3><ul><li>No directly matching commits or issue references found. This may be a novel bug.</li></ul></div><div class="subagent"><h3 style="color:#7c5cd8">git-blame</h3><ul><li>sample_repo/pricing.py: no recent changes — this file has been stable.</li><li>sample_repo/orders.py: no recent changes — this file has been stable.</li><li>sample_repo/app.py: no recent changes — this file has been stable.</li></ul></div></div>
+        </div>
+
+  <h2>Confidence</h2>
+  <div class="confidence">The causation chain is 4 frames deep — the tracer did not stop at the crash site but walked backward to find where the state was first created invalid. The root-cause code path (handle_request) had NO test coverage. The bug survived in production because there was no test to catch it.</div>
+
+  <h2>Suggested Fix</h2>
+  
+        <div class="card">
+          <div class="card-header" style="border-left:4px solid #27ae60">Minimal Code Change</div>
+          <div class="card-body"><p><strong>File:</strong> <code>sample_repo/app.py</code></p><pre class='diff'><span class="diff-del">--- a/sample_repo/app.py</span>
+
+<span class="diff-add">+++ b/sample_repo/app.py</span>
+
+<span class="diff-del">-     BUG: user.profile can be None when the user was created via OAuth</span>
+<span class="diff-add">+     # TODO: validate key existence before access</span>
+<span class="diff-add">+     BUG: user.profile can be None when the user was created via OAuth</span></pre><p>Key existence should be checked before dict access at this line.</p></div>
+        </div>
+
+  <h2>Test Recommendation</h2>
+  
+        <div class="card">
+          <div class="card-header" style="border-left:4px solid #7c5cd8">What would have caught this</div>
+          <div class="card-body"><p>Add a unit test that directly exercises `handle_request` with the exact input that triggers the bug (the value that caused `KeyError`). The test should live in a new test file for `sample_repo/app.py` and assert that:
+  1. The function raises a descriptive error (not a bare KeyError) when given invalid input.
+  2. The function returns the correct result for the valid boundary case.
+This test would have been red before the fix and green after — making the bug impossible to reintroduce silently.</p></div>
+        </div>
+
+  <footer>Made with IBM Bob 2.0</footer>
+</div>
+</body>
+</html>

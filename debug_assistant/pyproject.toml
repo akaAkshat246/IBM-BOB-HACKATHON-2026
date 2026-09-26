@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "debug-assistant"
+version = "0.1.0"
+description = "IBM Bob 2.0 Hackathon — Root-cause debugging assistant"
+requires-python = ">=3.9"
+dependencies = []          # zero external runtime deps — stdlib only
+
+[project.scripts]
+debug-assistant = "debug_assistant.cli:main"
+
+[tool.pytest.ini_options]
+# Run from IBM-BOB-HACKATHON-2026/debug_assistant/
+# testpaths is relative to the directory containing pyproject.toml
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+# Add the parent of debug_assistant/ (IBM-BOB-HACKATHON-2026/) to sys.path
+# so that "from debug_assistant.src import ..." resolves correctly.
+pythonpath = [".."]

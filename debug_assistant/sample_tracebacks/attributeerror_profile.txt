@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "sample_repo/app.py", line 55, in render_profile
+    name = user.profile.display_name
+AttributeError: 'NoneType' object has no attribute 'display_name'

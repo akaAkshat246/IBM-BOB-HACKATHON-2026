@@ -1,0 +1,70 @@
+# Environment variables and secrets
+.env
+*.env
+.env.local
+.env.*.local
+
+# Database and SQLite
+*.db
+*.sqlite3
+debug_assistant.db
+
+# Node.js and Frontend dependencies
+node_modules/
+**/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Python bytecode and caches
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+.env/
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Testing and coverage
+.pytest_cache/
+**/.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# Cloned repositories cache
+debug_assistant/backend/repos/
+**/backend/repos/
+
+# IDE and OS files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
