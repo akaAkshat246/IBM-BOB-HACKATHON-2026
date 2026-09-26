@@ -1,0 +1,14 @@
+node_modules
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+.git
+.gitignore
+.env
+debug_assistant.db
+.pytest_cache
